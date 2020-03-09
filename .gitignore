@@ -3,3 +3,6 @@
 a.out
 obj
 libft*
+.idea
+CMakeLists.txt
+cmake-build-debug
