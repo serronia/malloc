@@ -20,7 +20,7 @@ typedef struct          s_allocInfo
 
 typedef struct          s_pages
 {
-    struct allocInfo    *tiny;
+    allocInfo    *tiny;
     struct allocInfo    *small;
     struct allocInfo    *large;
 }                       pages;

@@ -36,7 +36,7 @@ void *tiny(size_t size)
     {
 
         printf("tiny est null\n");
-        PAGES.tiny = (struct allocInfo*)callMmap(3); //j'appelle mmap avec n pages (3 pour les tiny)
+        PAGES.tiny = (allocInfo *)callMmap(3); //j'appelle mmap avec n pages (3 pour les tiny)
 
         *(PAGES.tiny) = initStruct(size);
     }
