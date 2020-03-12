@@ -3,7 +3,9 @@
 # define FT_MALLOC_H
 
 # include <unistd.h>
+# include <stdio.h>
 # include <string.h>
+# include <sys/mman.h>
 
 # define ts             112
 # define ss             1536
@@ -23,4 +25,12 @@ typedef struct          s_pages
     struct allocInfo    *large;
 }                       pages;
 
+pages PAGES;
+
 int myfunct(char *str);
+void *malloc(size_t size);
+void *tiny(size_t size);
+void *small(size_t size);
+void *large(size_t size);
+
+#endif
