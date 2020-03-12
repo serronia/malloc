@@ -34,20 +34,26 @@ void *tiny(size_t size)
     printf("tiny\n");
     if (PAGES.tiny == NULL) //si allocInfo tiny n'a jamais été créé
     {
-
         printf("tiny est null\n");
         PAGES.tiny = (allocInfo *)callMmap(3); //j'appelle mmap avec n pages (3 pour les tiny)
-
         *(PAGES.tiny) = initStruct(size);
     }
     else
-        {
+    {
+        /*
+         * si PAGES.tiny existe il faut soit boucler pour trouver si il reste de la place dans nos
+         * pages ou garder un variable dans la global pour trouver plus facilement ou on peut poser le prochain
+         * malloc
+         * si il y a plus de place faut "init" de nouveau
+         * pense a comment on save nos donnee a quand il faudra free
+         */
+
 //            PAGES.tiny = PAGE.tiny->next;
 //            PAGES.tiny->size = size + structSize;
 //            PAGES.tiny->next += PAGES.tiny->size;
 //            PAGES.tiny->isFree = 0;
             printf("tiny n'est pas nul\n");
-        }
+      }
 //    PAGES.tiny->next += PAGES.tiny->size;
 
 //    return (PAGES.tiny + structSize);
@@ -73,6 +79,8 @@ void *malloc(size_t size)
     void *allocation;
 
     allocation = NULL;
+    if (size <= 0)
+        return (allocation);
     if (structSize + size <= ts)
     {
         allocation = tiny(size); //on va allouer un tiny si size + 16 <= 112

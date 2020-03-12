@@ -21,6 +21,7 @@ typedef struct          s_allocInfo
 typedef struct          s_pages
 {
     allocInfo    *tiny;
+    size_t          tSize;
     struct allocInfo    *small;
     struct allocInfo    *large;
 }                       pages;
