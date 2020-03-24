@@ -11,12 +11,13 @@
 # define ss             1536
 # define structSize     16
 
-typedef struct          s_allocInfo
+typedef struct          s_allocInfo allocInfo;
+struct s_allocInfo
 {
-    struct allocInfo    *next;
+    void    *next;
     size_t              size : 7;
     int                 isFree : 1;
-}                       allocInfo;
+};
 
 typedef struct          s_pages
 {
@@ -27,6 +28,7 @@ typedef struct          s_pages
 }                       pages;
 
 pages PAGES;
+void *start;
 
 int myfunct(char *str);
 void *malloc(size_t size);

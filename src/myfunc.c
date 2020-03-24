@@ -1,4 +1,4 @@
-#include "ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
 int myfunct(char *b)
 {
@@ -6,71 +6,123 @@ int myfunct(char *b)
     return(0);
 }
 
-void *callMmap(int nbPages)
+void *callMmap(allocInfo *zone, int nbPages, size_t size)
 {
-    void *p;
-    size_t size;
+    size_t page;
+    page = getpagesize() * nbPages;
 
-    printf("entrée dans callmap\n");
-    p = NULL;
-    size = getpagesize() * nbPages; // la taille de l'allocation est de la taille demandée + 16 Bytes de struct
+    zone = mmap(NULL, page, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+    zone->isFree = 0;
+    zone->size = size + structSize;
+    zone->next = NULL;
 
-    p = mmap(p, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-    return (p);
-
+    return (zone);
 }
 
-allocInfo initStruct(size_t size) //en cours
+allocInfo *initStruct(allocInfo *zone, size_t size) //en cours
 {
-    allocInfo actual;
+    allocInfo newZone;
 
-    actual.size = 1;
-    actual.isFree = 0;
-    return (actual);
-};
+    newZone.size = size + 16;
+    newZone.isFree = 0;
+    newZone.next = NULL;
+    zone->next = (void*)zone + size + structSize;
+
+    memcpy(zone->next, &newZone, structSize);
+    return (zone);
+}
+
+//allocInfo concatFree(allocInfo actual)
+//{
+//    allocInfo next = actual;
+//    while (next.next != NULL && next.next->isFree != 1)
+//    {
+//        next = *next.next;
+//        actual.size += next.size;
+//    }
+//    actual.next = next.next;
+//    return (actual);
+//}
+
+//size_t checkFree(allocInfo actualZone)
+//{
+//    int count;
+//
+//    count = actualZone.size;
+//    while (actualZone.next != NULL && actualZone.next->isFree == 1)
+//    {
+//        actualZone = *actualZone.next;
+//        count += actualZone.size;
+//    }
+//    return (count);
+//}
+
+allocInfo *nextZone(allocInfo *actualZone, size_t size)
+{
+    while (actualZone->next != NULL)
+    {
+        actualZone = actualZone->next;
+//        if (actualZone->isFree == 1)
+//        {
+//            printf("really");
+//            *actualZone = concatFree(*actualZone);
+//            if (actualZone.size >= size)
+//                return (*actualZone);
+//        }
+    }
+    initStruct(actualZone, size); //initialisation de la nouvelle zone (je créé le next dans initstruct)
+    return (actualZone->next);
+}
+
+void mapLength(allocInfo *map, int pages, size_t size)
+{
+    size_t totalLength;
+    totalLength = map->size;
+    while (map->next != NULL) //parcours toute la chaine
+    {
+        map = map->next;
+        totalLength += map->size;
+    }
+    printf("la length totale de tiny est de %zu\n", totalLength);
+
+    totalLength -= (totalLength / (pages * getpagesize())) * (pages * getpagesize()); //calcule la taille du dernier mmap appelé
+
+    printf("la length de la map actuelle est de %zu\n", totalLength);
+    if ((totalLength + size + 16) > (pages * getpagesize())) // verifie qu'il reste de la place
+    {
+        printf("faut une nouvelle page\n");
+        map->next =(allocInfo *)callMmap(PAGES.tiny, 3, size); // sinon mmap a la suite de la derniere zone allouée
+    }
+}
 
 void *tiny(size_t size)
 {
-    printf("tiny\n");
+    allocInfo *zone;
     if (PAGES.tiny == NULL) //si allocInfo tiny n'a jamais été créé
     {
-        printf("tiny est null\n");
-        PAGES.tiny = (allocInfo *)callMmap(3); //j'appelle mmap avec n pages (3 pour les tiny)
-        *(PAGES.tiny) = initStruct(size);
+        PAGES.tiny = (allocInfo *)callMmap(PAGES.tiny, 3, size); //j'appelle mmap avec n pages (3 pour les tiny)
+        zone = PAGES.tiny;
+        printf("tiny vaut %p\n", PAGES.tiny);
     }
     else
     {
-        /*
-         * si PAGES.tiny existe il faut soit boucler pour trouver si il reste de la place dans nos
-         * pages ou garder un variable dans la global pour trouver plus facilement ou on peut poser le prochain
-         * malloc
-         * si il y a plus de place faut "init" de nouveau
-         * pense a comment on save nos donnee a quand il faudra free
-         */
-
-//            PAGES.tiny = PAGE.tiny->next;
-//            PAGES.tiny->size = size + structSize;
-//            PAGES.tiny->next += PAGES.tiny->size;
-//            PAGES.tiny->isFree = 0;
-            printf("tiny n'est pas nul\n");
+        printf("tiny vaut %p\n", PAGES.tiny);
+        mapLength(PAGES.tiny, 3, size); //je verifie qu'il reste de la place
+        zone = nextZone(PAGES.tiny, size); //je recupere une zone libre avec la bonne size
       }
-//    PAGES.tiny->next += PAGES.tiny->size;
-
-//    return (PAGES.tiny + structSize);
-    return (NULL);
+    printf("zone d'ecriture vaut %p\n", zone);
+    return ((void*)zone + sizeof(allocInfo));
 }
 
 void *small(size_t size) // en cours
 {
     printf("small\n");
-
     return (NULL);
 }
 
 void *large(size_t size) // en cours
 {
     printf("large\n");
-
     return (NULL);
 }
 
