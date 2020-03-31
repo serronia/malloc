@@ -16,7 +16,7 @@ struct s_allocInfo
 {
     void    *next;
     size_t              size : 7;
-    int                 isFree : 1;
+    unsigned int                 isFree : 1;
 };
 
 typedef struct          s_pages
