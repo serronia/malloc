@@ -26,8 +26,16 @@ allocInfo *initStruct(allocInfo *zone, size_t size) //en cours
     newZone.size = size + 16;
     newZone.isFree = 0;
     newZone.next = NULL;
-    zone->next = (void*)zone + size + structSize;
+    zone->next = (void*)zone + zone->size;
     memcpy(zone->next, &newZone, structSize);
+
+//
+//    printf("size de la zone actuelle %d\n", zone->size);
+//    printf("size demandé %d\n", size);
+//    printf("le calcul %d\n", size + structSize);
+//    printf("zone %p\n", zone);
+//    printf("zone next %p\n", zone->next);
+
     return (zone);
 }
 
@@ -42,6 +50,7 @@ allocInfo *initStructFree(allocInfo *zone, size_t size) //en cours
 //    zone->next = (void*)zone + size;
     zone->next = (void*)zone + size + structSize;
     memcpy(zone->next, &newZone, structSize);
+
     return (zone);
 }
 
@@ -74,7 +83,7 @@ allocInfo *splitFree(allocInfo *actual, size_t size)
     actual->size = size + 16;
     actual->next = (void*)actual + size + structSize;
 
-    memcpy(actual->next, &new, new.size);
+    memcpy(actual->next, &new, structSize);
 
 
     // les pointeurs
@@ -106,20 +115,20 @@ allocInfo *oldSplitFree(allocInfo *actual, size_t size)
 
     next = actual->next;
 
-    printf("size demandé %lu\n", size + 16);
-    printf("actual au début %p\n", actual);
-    printf("actual size au début %d\n", actual->size);
-    printf("next au début %p\n", next);
+//    printf("size demandé %lu\n", size + 16);
+//    printf("actual au début %p\n", actual);
+//    printf("actual size au début %d\n", actual->size);
+//    printf("next au début %p\n", next);
 
     initStructFree(actual, actual->size - (size +16));
 
     tmp = actual->next;
 
-    printf("actual apres inistructfree %p\n", actual);
-    printf("next apres inistructfree %p\n", next);
-    printf("tmp apres inistructfree %p\n", tmp);
-    printf("tmp size apres inistructfree %d\n", tmp->size);
-    printf("actual size apres inistructfree %d\n", actual->size);
+//    printf("actual apres inistructfree %p\n", actual);
+//    printf("next apres inistructfree %p\n", next);
+//    printf("tmp apres inistructfree %p\n", tmp);
+//    printf("tmp size apres inistructfree %d\n", tmp->size);
+//    printf("actual size apres inistructfree %d\n", actual->size);
 
     actual->size = size + structSize;
 
@@ -143,10 +152,12 @@ allocInfo *nextZone(allocInfo *actualZone, size_t size)
         actualZone = actualZone->next;
         if (actualZone->isFree == 1)
         {
-            if (actualZone->size >= size + structSize)
+//            if (actualZone->size >= size + structSize)
+            if (actualZone->size >= size + structSize + 9)
                 return (splitFree(actualZone, size));
             concatFree(actualZone);
-            if (actualZone->size >= size + structSize)
+//            if (actualZone->size >= size + structSize)
+            if (actualZone->size >= size + structSize + 9)
                 return (splitFree(actualZone, size));
         }
     }
@@ -216,7 +227,7 @@ void *tiny(size_t size)
         zone = nextZone(PAGES.tiny, size); //je recupere une zone libre avec la bonne size
       }
 
-//    printAll();
+    printAll();
     return ((void*)zone + sizeof(allocInfo));
 }
 

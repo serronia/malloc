@@ -7,7 +7,7 @@ int main(int a, char **b)
     char *str;
     char *str2;
     char *str3;
-    str = (char*)malloc(1);
+//    str = (char*)malloc(1);
 
 
 
@@ -16,19 +16,29 @@ int main(int a, char **b)
     {
         p += 1;
         printf("%d : ", p);
-    str = malloc(1);
+//    str = malloc(1);
     printf("\n");
     }
 //    str2 = malloc(55);
     printf("\n");
-    str3 = malloc(55);    printf("\n");
+//    str3 = malloc(55);    printf("\n");
 //    str3 = malloc(55);    printf("\n");
 //    str3 = malloc(55);    printf("\n");
 
 //    printf("\n");
     str = malloc(1);    printf("\n");
+        str3 = malloc(55);    printf("\n");
+
     str = malloc(1);    printf("\n");
-    str = malloc(12);    printf("\n");
+//    str = malloc(1);    printf("\n");
+//    str = malloc(40);    printf("\n");
+    str = malloc(1);    printf("\n");
+    str = malloc(30);    printf("\n");
+    str = malloc(1);    printf("\n");
+//    str = malloc(1);    printf("\n");
+//    str = malloc(1);    printf("\n");
+//    str = malloc(1);    printf("\n");
+//    str = malloc(13);    printf("\n");
 //    str = malloc(1);    printf("\n");
 //////
 //////
