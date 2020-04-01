@@ -12,7 +12,7 @@ INC_PATH = ./includes/
 
 INC_NAME = ft_malloc.h
 
-SRC_NAME = myfunc.c
+SRC_NAME = free.c malloc.c utils.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC = $(addprefix $(INC_PATH), $(INC_NAME))
