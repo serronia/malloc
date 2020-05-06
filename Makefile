@@ -3,6 +3,7 @@ ifeq ($(HOSTTYPE),)
 endif
 
 NAME = libft_malloc_$(HOSTTYPE).so
+LIB = libft.a
 
 SYM_LINK = libft_malloc.so
 
@@ -12,7 +13,7 @@ INC_PATH = ./includes/
 
 INC_NAME = ft_malloc.h
 
-SRC_NAME = free.c malloc.c utils.c
+SRC_NAME = free.c malloc.c utils.c realloc.c show_alloc_mem.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC = $(addprefix $(INC_PATH), $(INC_NAME))
@@ -23,9 +24,12 @@ ifndef FLAG
 	FLAG = -Wall -Werror -Wexta -lcurses
 endif
 
-.PHONY : all clean fclean re drakauf
+.PHONY : all clean fclean re
 
-all: $(N) $(NAME)
+all: $(LIB) $(NAME)
+
+$(LIB):
+	cd libft && $(MAKE)
 
 $(NAME): $(OBJ_PATH) $(OBJ)
 	@ar rcs $(NAME) $(OBJ)

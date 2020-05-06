@@ -6,24 +6,23 @@
 
 allocInfo *nextZone(allocInfo *actualZone, size_t size)
 {
+    if (actualZone->isFree == 1)
+    {
+        concatFree(actualZone);
+        if (actualZone->size >= size + structSize * 2)
+            return (splitFree(actualZone, size));
+    }
     while (actualZone->next != NULL)
     {
         actualZone = actualZone->next;
         if (actualZone->isFree == 1)
         {
-            if (actualZone->size >= size + structSize * 2)
-                return (splitFree(actualZone, size));
             concatFree(actualZone);
             if (actualZone->size >= size + structSize * 2)
                 return (splitFree(actualZone, size));
         }
     }
-    initStruct(actualZone, size); //initialisation de la nouvelle zone (je créé le next dans initstruct)
-    if (size == 55 || size == 555)
-    {
-        actualZone = actualZone->next;
-        actualZone->isFree = 1;
-    }
+    initStruct(actualZone, size);
     return (actualZone->next);
 }
 
@@ -34,38 +33,16 @@ void mapLength(allocInfo *map, int pages, size_t size)
     totalLength = map->size;
     if (map->isFree == 1 && map->size >= size + structSize)
         return;
-    while (map->next != NULL) //parcours toute la chaine
+    while (map->next != NULL)
     {
         map = map->next;
         totalLength += map->size;
         if (map->isFree == 1 && map->size >= size + structSize)
-        {
             return;
-        }
     }
-    totalLength -= (totalLength / (pages * getpagesize())) * (pages * getpagesize()); //calcule la taille du dernier mmap appelé
-    if ((totalLength + size + structSize) > (pages * getpagesize())) // verifie qu'il reste de la place
-    {
-        map->next =(allocInfo *)callMmap(map, pages, size); // sinon mmap a la suite de la derniere zone allouée
-    }
-}
-
-void printAll()
-{
-    allocInfo *map = PAGES.small;
-    printf("pointeur actuel : %p \n", map);
-//    printf("la size         : %d\n", map->size);
-    printf("free            : %d\n", map->isFree);
-    printf("next            : %p\n", map->next);
-    while (map->next != NULL)
-    {
-        map = map->next;
-        printf("\npointeur actuel : %p \n", map);
-//        printf("la size         : %d\n", map->size);
-        printf("free            : %d\n", map->isFree);
-        printf("next            : %p\n", map->next);
-    }
-    printf("\n");
+    totalLength -= (totalLength / (pages * getpagesize())) * (pages * getpagesize());
+    if ((totalLength + size + structSize) > (pages * getpagesize()))
+        map->next = (allocInfo *)callMmap(map, pages, size);
 }
 
 void *callMmap(allocInfo *zone, int nbPages, size_t size)
@@ -80,7 +57,7 @@ void *callMmap(allocInfo *zone, int nbPages, size_t size)
     return (zone);
 }
 
-allocInfo *initStruct(allocInfo *zone, size_t size) //en cours
+allocInfo *initStruct(allocInfo *zone, size_t size)
 {
     allocInfo newZone;
 
@@ -88,6 +65,19 @@ allocInfo *initStruct(allocInfo *zone, size_t size) //en cours
     newZone.isFree = 0;
     newZone.next = NULL;
     zone->next = (void*)zone + zone->size;
-    memcpy(zone->next, &newZone, structSize);
+    ft_memcpy(zone->next, &newZone, structSize);
     return (zone);
+}
+
+size_t align_number(size_t size)
+{
+    size_t result;
+    size_t r;
+
+    r = size % 16;
+    if (r == 0)
+        result = size;
+    else
+        result = size +(16 - r);
+    return (result);
 }

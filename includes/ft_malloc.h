@@ -6,9 +6,11 @@
 # include <stdio.h>
 # include <string.h>
 # include <sys/mman.h>
+# include "../Libft/includes/libft.h"
 
-# define ts             112
-# define ss             1536
+
+# define ts             1024
+# define ss             4096
 # define structSize     16
 
 typedef struct          s_allocInfo allocInfo;
@@ -28,18 +30,24 @@ typedef struct          s_pages
 }                       pages;
 
 pages PAGES;
-void *start;
 
-void *malloc(size_t size);
-void *tiny(size_t size);
-void *small(size_t size);
-void *large(size_t size);
-void printAll();
-void mapLength(allocInfo *map, int pages, size_t size);
-allocInfo *nextZone(allocInfo *actualZone, size_t size);
-allocInfo *splitFree(allocInfo *actual, size_t size);
-allocInfo *concatFree(allocInfo *actual);
-allocInfo *initStruct(allocInfo *zone, size_t size);
-void *callMmap(allocInfo *zone, int nbPages, size_t size);
+
+void        *malloc(size_t size);
+void        free(void *ptr);
+void        *realloc(void *ptr, size_t size);
+void        show_alloc_mem();
+void        *tiny(size_t size);
+void        *small(size_t size);
+void        *large(size_t size);
+void        print_all(allocInfo *map);
+void        print_addr(void *addr);
+void        mapLength(allocInfo *map, int pages, size_t size);
+void        *callMmap(allocInfo *zone, int nbPages, size_t size);
+size_t      align_number(size_t size);
+allocInfo   *initStruct(allocInfo *zone, size_t size);
+allocInfo   *nextZone(allocInfo *actualZone, size_t size);
+allocInfo   *splitZone(allocInfo *actual, size_t size);
+allocInfo   *splitFree(allocInfo *actual, size_t size);
+allocInfo   *concatFree(allocInfo *actual);
 
 #endif

@@ -27,7 +27,38 @@ allocInfo *splitFree(allocInfo *actual, size_t size)
     actual->isFree = 0;
     actual->size = size + structSize;
     actual->next = (void*)actual + size + structSize;
-    memcpy(actual->next, &new, structSize);
+    ft_memcpy(actual->next, &new, structSize);
     return (actual);
 }
 
+allocInfo *previousZone(allocInfo *map, allocInfo *actual)
+{
+    allocInfo *prev;
+
+    prev = map;
+    if (prev == actual)
+        return 0;
+    while (prev->next != NULL && prev->next != actual)
+        prev = prev->next;
+    return (prev);
+}
+
+void free(void *ptr)
+{
+    allocInfo *prev;
+
+    if (ptr == NULL)
+        return;
+    allocInfo *freed = ptr - structSize;
+    if (freed->size <= 4096)
+        freed->isFree = 1;
+    else
+    {
+        prev = previousZone(PAGES.large, freed);
+        if (prev)
+            prev->next = freed->next;
+        else
+            PAGES.large = freed->next;
+        munmap(freed, freed->size);
+    }
+}

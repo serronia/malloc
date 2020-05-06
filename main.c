@@ -4,31 +4,22 @@ int main(int a, char **b)
 {
     if (a != 1)
         write(1, b, 1);
-    char *str;
-    char *str2;
+
     char *str3;
-//    str = (char*)malloc(1);
 
+    str3 = malloc(12);    printf("EeND\n\n ");
 
+    str3 = malloc(50);    printf("END\n\n");
+    str3 = malloc(5000);    printf("END\n\n");
+    str3 = malloc(14000);    printf("END\n\n");
+    str3 = realloc(str3, 51);      printf("END\n\n");
+    str3 = malloc(2000);    printf("END\n\n");
 
-    int p = 0;
-    while (p < 1)
-    {
-        p += 1;
-        printf("%d : \n", p);
-    }
-    str3 = malloc(1180);    printf("\n");
-//    str = malloc(1);    printf("\n");
-//    str = malloc(1);    printf("\n");
-//    str = malloc(55);    printf("\n");
-//    str = malloc(1);    printf("\n");
+    str3 = malloc(10);    printf("END\n\n");
 
-    printf("je sors\n");
-
-    size_t i = getpagesize() * 3;
-    printf("\nla taille des pages sont %zu\n", i);
-    printf("hmmm %p", &str[0]);
-
+    show_alloc_mem();
 
     return(0);
 }
+
+

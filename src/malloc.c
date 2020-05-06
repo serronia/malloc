@@ -3,24 +3,24 @@
 void *tiny(size_t size)
 {
     allocInfo *zone;
-    if (PAGES.tiny == NULL) //si allocInfo tiny n'a jamais été créé
+
+    if (PAGES.tiny == NULL)
     {
-        PAGES.tiny = (allocInfo *)callMmap(PAGES.tiny, 3, size); //j'appelle mmap avec n pages (3 pour les tiny)
+        PAGES.tiny = (allocInfo *)callMmap(PAGES.tiny, 3, size);
         zone = PAGES.tiny;
     }
     else
     {
-        mapLength(PAGES.tiny, 3, size); //je verifie qu'il reste de la place
-        zone = nextZone(PAGES.tiny, size); //je recupere une zone libre avec la bonne size
+        mapLength(PAGES.tiny, 3, size);
+        zone = nextZone(PAGES.tiny, size);
     }
-//    printAll();
     return ((void*)zone + sizeof(allocInfo));
 }
 
-void *small(size_t size) // en cours
+void *small(size_t size)
 {
-//    printf("small\n");
     allocInfo *zone;
+
     if (PAGES.small == NULL)
     {
         PAGES.small = (allocInfo *)callMmap(PAGES.small, 6, size);
@@ -31,28 +31,49 @@ void *small(size_t size) // en cours
         mapLength(PAGES.small, 6, size);
         zone = nextZone(PAGES.small, size);
     }
-//    printAll();
     return ((void*)zone + sizeof(allocInfo));
 }
 
-void *large(size_t size) // en cours
+void *large(size_t size)
 {
-//    printf("large\n");
-    return (NULL);
+    size_t      nbPage;
+    allocInfo   *zone;
+    allocInfo   *map;
+
+    map = PAGES.large;
+    nbPage = ((size + structSize) / getpagesize()) + 1;
+    if (PAGES.large == NULL)
+    {
+        PAGES.large = (allocInfo *)callMmap(PAGES.large, nbPage, size);
+        zone = PAGES.large;
+    }
+    else
+    {
+        zone = PAGES.large;
+        while (zone->next != NULL)
+            zone = zone->next;
+        if (zone->next == NULL)
+        {
+            zone->next =(allocInfo *)callMmap(PAGES.large, nbPage, size);
+            zone = zone->next;
+        }
+    }
+    return ((void*)zone + sizeof(allocInfo));
 }
 
 void *malloc(size_t size)
 {
     void *allocation;
 
+    size = align_number(size);
     allocation = NULL;
     if (size <= 0)
         return (allocation);
     if (structSize + size <= ts)
-        allocation = tiny(size); //on va allouer un tiny si size + 16 <= 112
+        allocation = tiny(size);
     else if (structSize + size <= ss)
-        allocation = small(size); //on va allouer un tiny si size + 16 <= 1536
+        allocation = small(size);
     else
-        allocation = large(size); //sinon c'est un large
+        allocation = large(size);
     return (allocation);
 }
