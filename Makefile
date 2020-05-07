@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: shan <shan@student.42.fr>                  +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/05/06 12:11:03 by shthevak          #+#    #+#              #
+#    Updated: 2020/05/07 18:01:38 by shan             ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE = $(shell uname -m)_$(shell uname -s)
 endif
@@ -21,7 +33,7 @@ OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))
 
 ifndef FLAG
-	FLAG = -Wall -Werror -Wexta -lcurses
+	FLAG = -Wall -Werror -Wextra 
 endif
 
 .PHONY : all clean fclean re
@@ -29,13 +41,13 @@ endif
 all: $(LIBFT) $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ_PATH) $(OBJ)
-	@ar rcs $(NAME) $(OBJ) $(LIBFT)
+	@gcc $(FLAGS) -shared -o $(NAME) $(OBJ) $(LIBFT)
 	@ln -s $(NAME) $(SYM_LINK) 2> /dev/null || True
 	@echo "$(NAME) created"
 
 $(LIBFT):
 	echo "1"
-	make -C ./Libft
+	@make -C ./Libft
 
 $(OBJ_PATH):
 	echo "2"
@@ -44,16 +56,20 @@ $(OBJ_PATH):
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC)
 	echo "3"
-	@gcc $(FLAGS) -I includes -o $@ -c $<
+	@gcc $(FLAGS)  -I includes  -o $@ -c $< 
 	@echo "Binary File done : $*$\"
 
 clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null
 	@echo "Objs cleaned"
+	@make clean -C ./Libft
+
 
 fclean: clean
 	@rm -rf $(NAME) 2> /dev/null
 	@rm -rf $(SYM_LINK) 2> /dev/null
 	@echo "$(NAME) deleted"
+	@make fclean -C ./Libft
+
 
 re: fclean  all
