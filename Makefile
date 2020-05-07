@@ -3,9 +3,9 @@ ifeq ($(HOSTTYPE),)
 endif
 
 NAME = libft_malloc_$(HOSTTYPE).so
-LIB = libft.a
-
 SYM_LINK = libft_malloc.so
+
+LIBFT =  Libft/libft.a
 
 SRC_PATH = ./src/
 OBJ_PATH = ./obj/
@@ -26,22 +26,25 @@ endif
 
 .PHONY : all clean fclean re
 
-all: $(LIB) $(NAME)
+all: $(LIBFT) $(NAME)
 
-$(LIB):
-	cd libft && $(MAKE)
-
-$(NAME): $(OBJ_PATH) $(OBJ)
-	@ar rcs $(NAME) $(OBJ)
+$(NAME): $(LIBFT) $(OBJ_PATH) $(OBJ)
+	@ar rcs $(NAME) $(OBJ) $(LIBFT)
 	@ln -s $(NAME) $(SYM_LINK) 2> /dev/null || True
 	@echo "$(NAME) created"
 
+$(LIBFT):
+	echo "1"
+	make -C ./Libft
+
 $(OBJ_PATH):
+	echo "2"
 	@mkdir -p $(OBJ_PATH) 2> /dev/null
 	@echo "Directory ./obj created"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC)
-	@gcc $(FLAGS) -Iincludes -o $@ -c $<
+	echo "3"
+	@gcc $(FLAGS) -I includes -o $@ -c $<
 	@echo "Binary File done : $*$\"
 
 clean:
