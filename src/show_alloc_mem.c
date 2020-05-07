@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   show_alloc_mem.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jdarko <jdarko@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/07 18:10:10 by jdarko            #+#    #+#             */
+/*   Updated: 2020/05/07 18:10:23 by jdarko           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../includes/ft_malloc.h"
-
 
 void show_alloc_mem()
 {
@@ -17,7 +27,6 @@ void show_alloc_mem()
     write(1, "\n", 1);
     print_all(PAGES.large);
 }
-
 
 void print_all(allocInfo *map)
 {
