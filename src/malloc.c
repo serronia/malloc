@@ -18,12 +18,12 @@ void *tiny(size_t size)
 
     if (PAGES.tiny == NULL)
     {
-        PAGES.tiny = (allocInfo *)callMmap(PAGES.tiny, 3, size);
+        PAGES.tiny = (allocInfo *)callMmap(PAGES.tiny, 4, size);
         zone = PAGES.tiny;
     }
     else
     {
-        mapLength(PAGES.tiny, 3, size);
+        mapLength(PAGES.tiny, 4, size);
         zone = nextZone(PAGES.tiny, size);
     }
     return ((void*)zone + sizeof(allocInfo));
@@ -35,12 +35,12 @@ void *small(size_t size)
 
     if (PAGES.small == NULL)
     {
-        PAGES.small = (allocInfo *)callMmap(PAGES.small, 6, size);
+        PAGES.small = (allocInfo *)callMmap(PAGES.small, 26, size);
         zone = PAGES.small;
     }
     else
     {
-        mapLength(PAGES.small, 6, size);
+        mapLength(PAGES.small, 26, size);
         zone = nextZone(PAGES.small, size);
     }
     return ((void*)zone + sizeof(allocInfo));

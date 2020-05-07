@@ -20,8 +20,8 @@
 # include "../Libft/includes/libft.h"
 
 
-# define ts             1024
-# define ss             4096
+# define ts             128
+# define ss             1024
 # define structSize     16
 
 typedef struct          s_allocInfo allocInfo;
