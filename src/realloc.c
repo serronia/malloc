@@ -18,6 +18,8 @@ void *realloc(void *ptr, size_t size)
     allocInfo *actual;
 
     zone = ptr - 16;
+    if (exists(zone))
+        return (NULL);
     if (zone->size >= size + 16 * 2)
         zone = splitZone(zone, size);
     else
@@ -26,7 +28,6 @@ void *realloc(void *ptr, size_t size)
         zone = malloc(size);
         ft_memcpy(zone, actual, actual->size);
         actual->isFree = 1;
-
     }
     return ((void*)zone + (sizeof(allocInfo)));
 }
@@ -42,4 +43,32 @@ allocInfo *splitZone(allocInfo *actual, size_t size)
     actual->next = (void*)actual + actual->size;
     ft_memcpy(actual->next, &new, structSize);
     return (actual);
+}
+
+int exists(allocInfo *map)
+{
+    allocInfo *reel;
+
+    reel = PAGES.tiny;
+    while (reel != NULL)
+    {
+        if (reel == map)
+            return (0);
+        reel = reel->next;
+    }
+    reel = PAGES.small;
+    while (reel != NULL)
+    {
+        if (reel == map)
+            return (0);
+        reel = reel->next;
+    }
+    reel = PAGES.large;
+    while (reel != NULL)
+    {
+        if (reel == map)
+            return (0);
+        reel = reel->next;
+    }
+    return (1);
 }

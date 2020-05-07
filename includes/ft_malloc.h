@@ -49,6 +49,7 @@ void        *realloc(void *ptr, size_t size);
 void        show_alloc_mem();
 void        *tiny(size_t size);
 void        *small(size_t size);
+int         exists(allocInfo *map);
 void        *large(size_t size);
 void        print_all(allocInfo *map);
 void        print_addr(void *addr);
