@@ -53,6 +53,7 @@ int         exists(allocInfo *map);
 void        *large(size_t size);
 void        print_all(allocInfo *map);
 void        print_addr(void *addr);
+void *calloc(size_t nbElement, size_t sizeElement);
 void        mapLength(allocInfo *map, int pages, size_t size);
 void        *callMmap(allocInfo *zone, int nbPages, size_t size);
 size_t      align_number(size_t size);

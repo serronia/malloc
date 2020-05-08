@@ -17,6 +17,8 @@ int main(int a, char **b)
 
     str3 = malloc(10);    printf("END\n\n");
 
+    str3 = calloc(50, sizeof(int));
+
     show_alloc_mem();
 
     return(0);
