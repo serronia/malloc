@@ -18,10 +18,10 @@ void *realloc(void *ptr, size_t size)
 	allocInfo	*zone;
 	allocInfo	*actual;
 
-	zone = ptr - 16;
+	zone = ptr - structSize;
 	if (exists(zone))
 		return (NULL);
-	if (zone->size >= size + 16 * 2)
+	if (zone->size >= size + structSize * 2)
 		zone = splitZone(zone, size);
 	else
 	{

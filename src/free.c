@@ -63,6 +63,8 @@ void free(void *ptr)
 	if (ptr == NULL)
 		return;
 	allocInfo *freed = ptr - structSize;
+	if (exists(freed))
+		return;
 	if (freed->size <= 4096)
 		freed->isFree = 1;
 	else
