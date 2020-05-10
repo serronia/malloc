@@ -3,12 +3,13 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: shan <jdarko@student.42.fr>                +#+  +:+       +#+         #
+#    By: jdarko <jdarko@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/05/06 12:11:03 by jdarko            #+#    #+#              #
-#    Updated: 2020/05/07 18:12:32 by jdarko           ###   ########.fr        #
+#    Created: 2020/05/10 16:41:59 by jdarko            #+#    #+#              #
+#    Updated: 2020/05/10 16:42:01 by jdarko           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE = $(shell uname -m)_$(shell uname -s)
