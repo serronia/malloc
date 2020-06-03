@@ -10,10 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/ft_malloc.h"
 
-void show_alloc_mem()
+void	show_alloc_mem(void)
 {
 	write(1, "Tiny : ", 8);
 	print_addr(PAGES.tiny);
@@ -29,7 +28,7 @@ void show_alloc_mem()
 	print_all(PAGES.large);
 }
 
-void print_all(allocInfo *map)
+void	print_all(allocInfo *map)
 {
 	while (map)
 	{
@@ -40,17 +39,17 @@ void print_all(allocInfo *map)
 		ft_putnbr(map->size);
 		write(1, " octets\n", 8);
 		if (map->next == NULL)
-			return ;
+			exit(0);
 		map = map->next;
 	}
 }
 
-void print_addr(void *addr)
+void	print_addr(void *addr)
 {
-	size_t  base;
-	size_t  diviseur;
-	size_t  result;
-	size_t  nbr;
+	size_t	base;
+	size_t	diviseur;
+	size_t	result;
+	size_t	nbr;
 
 	base = 16;
 	nbr = (size_t)addr;
@@ -60,11 +59,11 @@ void print_addr(void *addr)
 	write(1, "0x", 2);
 	while (diviseur > 0)
 	{
-		result = (nbr / diviseur) % base ;
+		result = (nbr / diviseur) % base;
 		if (result < 10)
-			result +=48;
+			result += 48;
 		else
-			result += 97 - ((result/base) + 10);
+			result += 97 - ((result / base) + 10);
 		write(1, &result, 1);
 		diviseur = diviseur / base;
 	}

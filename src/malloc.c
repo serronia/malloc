@@ -10,54 +10,53 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/ft_malloc.h"
 
-void *tiny(size_t size)
+void	*tiny(size_t size)
 {
-	allocInfo *zone;
+	allocInfo	*zone;
 
 	if (PAGES.tiny == NULL)
 	{
-		PAGES.tiny = (allocInfo *)callMmap(PAGES.tiny, 4, size);
+		PAGES.tiny = (allocInfo *)call_mmap(PAGES.tiny, 4, size);
 		zone = PAGES.tiny;
 	}
 	else
 	{
-		mapLength(PAGES.tiny, 4, size);
-		zone = nextZone(PAGES.tiny, size);
+		map_length(PAGES.tiny, 4, size);
+		zone = next_zone(PAGES.tiny, size);
 	}
 	return ((void*)zone + sizeof(allocInfo));
 }
 
-void *small(size_t size)
+void	*small(size_t size)
 {
-	allocInfo *zone;
+	allocInfo	*zone;
 
 	if (PAGES.small == NULL)
 	{
-		PAGES.small = (allocInfo *)callMmap(PAGES.small, 26, size);
+		PAGES.small = (allocInfo *)call_mmap(PAGES.small, 26, size);
 		zone = PAGES.small;
 	}
 	else
 	{
-		mapLength(PAGES.small, 26, size);
-		zone = nextZone(PAGES.small, size);
+		map_length(PAGES.small, 26, size);
+		zone = next_zone(PAGES.small, size);
 	}
 	return ((void*)zone + sizeof(allocInfo));
 }
 
-void *large(size_t size)
+void	*large(size_t size)
 {
-	size_t	  nbPage;
-	allocInfo   *zone;
-	allocInfo   *map;
+	size_t		nb_page;
+	allocInfo	*zone;
+	allocInfo	*map;
 
 	map = PAGES.large;
-	nbPage = ((size + structSize) / getpagesize()) + 1;
+	nb_page = ((size + structSize) / getpagesize()) + 1;
 	if (PAGES.large == NULL)
 	{
-		PAGES.large = (allocInfo *)callMmap(PAGES.large, nbPage, size);
+		PAGES.large = (allocInfo *)call_mmap(PAGES.large, nb_page, size);
 		zone = PAGES.large;
 	}
 	else
@@ -67,16 +66,16 @@ void *large(size_t size)
 			zone = zone->next;
 		if (zone->next == NULL)
 		{
-			zone->next =(allocInfo *)callMmap(PAGES.large, nbPage, size);
+			zone->next = (allocInfo *)call_mmap(PAGES.large, nb_page, size);
 			zone = zone->next;
 		}
 	}
 	return ((void*)zone + sizeof(allocInfo));
 }
 
-void *malloc(size_t size)
+void	*malloc(size_t size)
 {
-	void *allocation;
+	void	*allocation;
 
 	size = align_number(size);
 	allocation = NULL;

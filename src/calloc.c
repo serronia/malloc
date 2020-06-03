@@ -10,19 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/ft_malloc.h"
 
-void *calloc(size_t nbElement, size_t sizeElement)
+void	*calloc(size_t nb_element, size_t size_element)
 {
-	size_t totalSize;
-	void *ptr;
-	allocInfo *zone;
+	void		*ptr;
+	allocInfo	*zone;
+	size_t		total_size;
 
-	totalSize = nbElement * sizeElement;
-	if ((ptr = malloc(totalSize)) == NULL)
+	total_size = nb_element * size_element;
+	if ((ptr = malloc(total_size)) == NULL)
 		return (NULL);
 	zone = ptr + structSize;
-	zone = ft_memset(zone, 0, sizeElement);
+	zone = ft_memset(zone, 0, size_element);
 	return (ptr);
 }

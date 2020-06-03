@@ -10,29 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/ft_malloc.h"
 
-allocInfo *concatFree(allocInfo *actual)
+allocInfo	*concat_free(allocInfo *actual)
 {
-	allocInfo *tmp;
-	allocInfo *tmpNext;
+	allocInfo	*tmp;
+	allocInfo	*tmp_next;
 
 	tmp = actual;
-	tmpNext = actual->next;
-	while (tmpNext != NULL && tmpNext->isFree == 1)
+	tmp_next = actual->next;
+	while (tmp_next != NULL && tmp_next->isFree == 1)
 	{
-			actual->size += tmpNext->size;
-			tmpNext = tmpNext->next;
+		actual->size += tmp_next->size;
+		tmp_next = tmp_next->next;
 	}
-	actual->next = tmpNext;
+	actual->next = tmp_next;
 	return (actual);
 }
 
-allocInfo *splitFree(allocInfo *actual, size_t size)
+allocInfo	*split_free(allocInfo *actual, size_t size)
 {
-	allocInfo *next;
-	allocInfo new;
+	allocInfo	*next;
+	allocInfo	new;
 
 	new.size = actual->size - (size + structSize);
 	new.isFree = 1;
@@ -44,32 +43,33 @@ allocInfo *splitFree(allocInfo *actual, size_t size)
 	return (actual);
 }
 
-allocInfo *previousZone(allocInfo *map, allocInfo *actual)
+allocInfo	*previous_zone(allocInfo *map, allocInfo *actual)
 {
-	allocInfo *prev;
+	allocInfo	*prev;
 
 	prev = map;
 	if (prev == actual)
-		return 0;
+		return (0);
 	while (prev->next != NULL && prev->next != actual)
 		prev = prev->next;
 	return (prev);
 }
 
-void free(void *ptr)
+void		free(void *ptr)
 {
-	allocInfo *prev;
+	allocInfo	*prev;
+	allocInfo	*freed;
 
 	if (ptr == NULL)
-		return;
-	allocInfo *freed = ptr - structSize;
+		exit(0);
+	freed = ptr - structSize;
 	if (exists(freed))
-		return;
+		exit(0);
 	if (freed->size <= 4096)
 		freed->isFree = 1;
 	else
 	{
-		prev = previousZone(PAGES.large, freed);
+		prev = previous_zone(PAGES.large, freed);
 		if (prev)
 			prev->next = freed->next;
 		else

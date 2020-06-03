@@ -10,10 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/ft_malloc.h"
 
-void *realloc(void *ptr, size_t size)
+void		*realloc(void *ptr, size_t size)
 {
 	allocInfo	*zone;
 	allocInfo	*actual;
@@ -22,7 +21,7 @@ void *realloc(void *ptr, size_t size)
 	if (exists(zone))
 		return (NULL);
 	if (zone->size >= size + structSize * 2)
-		zone = splitZone(zone, size);
+		zone = split_zone(zone, size);
 	else
 	{
 		actual = zone;
@@ -33,9 +32,9 @@ void *realloc(void *ptr, size_t size)
 	return ((void*)zone + (sizeof(allocInfo)));
 }
 
-allocInfo *splitZone(allocInfo *actual, size_t size)
+allocInfo	*split_zone(allocInfo *actual, size_t size)
 {
-	allocInfo new;
+	allocInfo	new;
 
 	new.size = actual->size - (size + structSize);
 	new.next = actual->next;
@@ -46,7 +45,7 @@ allocInfo *splitZone(allocInfo *actual, size_t size)
 	return (actual);
 }
 
-int exists(allocInfo *map)
+int			exists(allocInfo *map)
 {
 	allocInfo *reel;
 
