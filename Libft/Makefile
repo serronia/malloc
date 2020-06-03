@@ -1,15 +1,15 @@
 # **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: shan <shan@student.42.fr>                  +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2017/11/22 22:56:15 by jdarko            #+#    #+#              #
-#    Updated: 2020/05/07 17:47:16 by shan             ###   ########.fr        #
-#                                                                              #
+#                                                           LE - /             #
+#                                                               /              #
+#    Makefile                                         .::    .:/ .      .::    #
+#                                                  +:+:+   +:    +:  +:+:+     #
+#    By: jdarko <marvin@le-101.fr>                  +:+   +:    +:    +:+      #
+#                                                  #+#   #+    #+    #+#       #
+#    Created: 2017/11/22 22:56:15 by jdarko       #+#   ##    ##    #+#        #
+#    Updated: 2019/05/15 01:14:24 by jdarko      ###    #+. /#+    ###.fr      #
+#                                                          /                   #
+#                                                         /                    #
 # **************************************************************************** #
-
 
 .PHONY : all re clean fclean
 
@@ -38,15 +38,15 @@ FLAG = -Wall -Werror -Wextra
 all : $(NAME)
 
 $(NAME) : $(OBJ) $(INC)
-	@ar rcs $(NAME) $(OBJ)
+	ar rcs $(NAME) $(OBJ)
 
 ./%.o : ./%.c
 	@gcc $(FLAG) -fPIC -o $@ -c $<
 
 clean :
-	@rm -f $(OBJ)
+	rm -f $(OBJ)
 
 fclean : clean
-	@rm -f $(NAME)
+	rm -f $(NAME)
 
 re : fclean all
