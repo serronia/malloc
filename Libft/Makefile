@@ -41,7 +41,7 @@ $(NAME) : $(OBJ) $(INC)
 	ar rcs $(NAME) $(OBJ)
 
 ./%.o : ./%.c
-	gcc $(FLAG) -o $@ -c $<
+	@gcc $(FLAG) -fPIC -o $@ -c $<
 
 clean :
 	rm -f $(OBJ)
