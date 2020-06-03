@@ -56,7 +56,7 @@ $(OBJ_PATH):
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC)
 	echo "3"
-	@gcc $(FLAGS)  -I includes  -o $@ -c $< 
+	@gcc $(FLAGS) -fPIC  -I includes  -o $@ -c $< 
 	@echo "Binary File done : $*$\"
 
 clean:
