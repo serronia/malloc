@@ -15,20 +15,20 @@
 void	show_alloc_mem(void)
 {
 	write(1, "Tiny : ", 8);
-	print_addr(PAGES.tiny);
+	print_addr(g_pages.tiny);
 	write(1, "\n", 1);
-	print_all(PAGES.tiny);
+	print_all(g_pages.tiny);
 	write(1, "Small : ", 9);
-	print_addr(PAGES.small);
+	print_addr(g_pages.small);
 	write(1, "\n", 1);
-	print_all(PAGES.small);
+	print_all(g_pages.small);
 	write(1, "Large : ", 9);
-	print_addr(PAGES.large);
+	print_addr(g_pages.large);
 	write(1, "\n", 1);
-	print_all(PAGES.large);
+	print_all(g_pages.large);
 }
 
-void	print_all(allocInfo *map)
+void	print_all(t_allocinfo *map)
 {
 	while (map)
 	{
@@ -39,7 +39,7 @@ void	print_all(allocInfo *map)
 		ft_putnbr(map->size);
 		write(1, " octets\n", 8);
 		if (map->next == NULL)
-			exit(0);
+			break;
 		map = map->next;
 	}
 }

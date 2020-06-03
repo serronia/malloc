@@ -14,56 +14,56 @@
 
 void		*realloc(void *ptr, size_t size)
 {
-	allocInfo	*zone;
-	allocInfo	*actual;
+	t_allocinfo	*zone;
+	t_allocinfo	*actual;
 
-	zone = ptr - structSize;
+	zone = ptr - STRUCTSIZE;
 	if (exists(zone))
 		return (NULL);
-	if (zone->size >= size + structSize * 2)
+	if (zone->size >= size + STRUCTSIZE * 2)
 		zone = split_zone(zone, size);
 	else
 	{
 		actual = zone;
 		zone = malloc(size);
 		ft_memcpy(zone, actual, actual->size);
-		actual->isFree = 1;
+		actual->is_free = 1;
 	}
-	return ((void*)zone + (sizeof(allocInfo)));
+	return ((void*)zone + (sizeof(t_allocinfo)));
 }
 
-allocInfo	*split_zone(allocInfo *actual, size_t size)
+t_allocinfo	*split_zone(t_allocinfo *actual, size_t size)
 {
-	allocInfo	new;
+	t_allocinfo	new;
 
-	new.size = actual->size - (size + structSize);
+	new.size = actual->size - (size + STRUCTSIZE);
 	new.next = actual->next;
-	new.isFree = 1;
-	actual->size = size + structSize;
+	new.is_free = 1;
+	actual->size = size + STRUCTSIZE;
 	actual->next = (void*)actual + actual->size;
-	ft_memcpy(actual->next, &new, structSize);
+	ft_memcpy(actual->next, &new, STRUCTSIZE);
 	return (actual);
 }
 
-int			exists(allocInfo *map)
+int			exists(t_allocinfo *map)
 {
-	allocInfo *reel;
+	t_allocinfo *reel;
 
-	reel = PAGES.tiny;
+	reel = g_pages.tiny;
 	while (reel != NULL)
 	{
 		if (reel == map)
 			return (0);
 		reel = reel->next;
 	}
-	reel = PAGES.small;
+	reel = g_pages.small;
 	while (reel != NULL)
 	{
 		if (reel == map)
 			return (0);
 		reel = reel->next;
 	}
-	reel = PAGES.large;
+	reel = g_pages.large;
 	while (reel != NULL)
 	{
 		if (reel == map)

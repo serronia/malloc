@@ -12,14 +12,14 @@
 
 #include "../includes/ft_malloc.h"
 
-allocInfo	*concat_free(allocInfo *actual)
+t_allocinfo	*concat_free(t_allocinfo *actual)
 {
-	allocInfo	*tmp;
-	allocInfo	*tmp_next;
+	t_allocinfo	*tmp;
+	t_allocinfo	*tmp_next;
 
 	tmp = actual;
 	tmp_next = actual->next;
-	while (tmp_next != NULL && tmp_next->isFree == 1)
+	while (tmp_next != NULL && tmp_next->is_free == 1)
 	{
 		actual->size += tmp_next->size;
 		tmp_next = tmp_next->next;
@@ -28,24 +28,24 @@ allocInfo	*concat_free(allocInfo *actual)
 	return (actual);
 }
 
-allocInfo	*split_free(allocInfo *actual, size_t size)
+t_allocinfo	*split_free(t_allocinfo *actual, size_t size)
 {
-	allocInfo	*next;
-	allocInfo	new;
+	t_allocinfo	*next;
+	t_allocinfo	new;
 
-	new.size = actual->size - (size + structSize);
-	new.isFree = 1;
+	new.size = actual->size - (size + STRUCTSIZE);
+	new.is_free = 1;
 	new.next = actual->next;
-	actual->isFree = 0;
-	actual->size = size + structSize;
-	actual->next = (void*)actual + size + structSize;
-	ft_memcpy(actual->next, &new, structSize);
+	actual->is_free = 0;
+	actual->size = size + STRUCTSIZE;
+	actual->next = (void*)actual + size + STRUCTSIZE;
+	ft_memcpy(actual->next, &new, STRUCTSIZE);
 	return (actual);
 }
 
-allocInfo	*previous_zone(allocInfo *map, allocInfo *actual)
+t_allocinfo	*previous_zone(t_allocinfo *map, t_allocinfo *actual)
 {
-	allocInfo	*prev;
+	t_allocinfo	*prev;
 
 	prev = map;
 	if (prev == actual)
@@ -57,23 +57,23 @@ allocInfo	*previous_zone(allocInfo *map, allocInfo *actual)
 
 void		free(void *ptr)
 {
-	allocInfo	*prev;
-	allocInfo	*freed;
+	t_allocinfo	*prev;
+	t_allocinfo	*freed;
 
 	if (ptr == NULL)
 		exit(0);
-	freed = ptr - structSize;
+	freed = ptr - STRUCTSIZE;
 	if (exists(freed))
 		exit(0);
 	if (freed->size <= 4096)
-		freed->isFree = 1;
+		freed->is_free = 1;
 	else
 	{
-		prev = previous_zone(PAGES.large, freed);
+		prev = previous_zone(g_pages.large, freed);
 		if (prev)
 			prev->next = freed->next;
 		else
-			PAGES.large = freed->next;
+			g_pages.large = freed->next;
 		munmap(freed, freed->size);
 	}
 }

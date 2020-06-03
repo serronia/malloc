@@ -14,63 +14,63 @@
 
 void	*tiny(size_t size)
 {
-	allocInfo	*zone;
+	t_allocinfo	*zone;
 
-	if (PAGES.tiny == NULL)
+	if (g_pages.tiny == NULL)
 	{
-		PAGES.tiny = (allocInfo *)call_mmap(PAGES.tiny, 4, size);
-		zone = PAGES.tiny;
+		g_pages.tiny = (t_allocinfo *)call_mmap(g_pages.tiny, 4, size);
+		zone = g_pages.tiny;
 	}
 	else
 	{
-		map_length(PAGES.tiny, 4, size);
-		zone = next_zone(PAGES.tiny, size);
+		map_length(g_pages.tiny, 4, size);
+		zone = next_zone(g_pages.tiny, size);
 	}
-	return ((void*)zone + sizeof(allocInfo));
+	return ((void*)zone + sizeof(t_allocinfo));
 }
 
 void	*small(size_t size)
 {
-	allocInfo	*zone;
+	t_allocinfo	*zone;
 
-	if (PAGES.small == NULL)
+	if (g_pages.small == NULL)
 	{
-		PAGES.small = (allocInfo *)call_mmap(PAGES.small, 26, size);
-		zone = PAGES.small;
+		g_pages.small = (t_allocinfo *)call_mmap(g_pages.small, 26, size);
+		zone = g_pages.small;
 	}
 	else
 	{
-		map_length(PAGES.small, 26, size);
-		zone = next_zone(PAGES.small, size);
+		map_length(g_pages.small, 26, size);
+		zone = next_zone(g_pages.small, size);
 	}
-	return ((void*)zone + sizeof(allocInfo));
+	return ((void*)zone + sizeof(t_allocinfo));
 }
 
 void	*large(size_t size)
 {
 	size_t		nb_page;
-	allocInfo	*zone;
-	allocInfo	*map;
+	t_allocinfo	*zone;
+	t_allocinfo	*map;
 
-	map = PAGES.large;
-	nb_page = ((size + structSize) / getpagesize()) + 1;
-	if (PAGES.large == NULL)
+	map = g_pages.large;
+	nb_page = ((size + STRUCTSIZE) / getpagesize()) + 1;
+	if (g_pages.large == NULL)
 	{
-		PAGES.large = (allocInfo *)call_mmap(PAGES.large, nb_page, size);
-		zone = PAGES.large;
+		g_pages.large = (t_allocinfo *)call_mmap(g_pages.large, nb_page, size);
+		zone = g_pages.large;
 	}
 	else
 	{
-		zone = PAGES.large;
+		zone = g_pages.large;
 		while (zone->next != NULL)
 			zone = zone->next;
 		if (zone->next == NULL)
 		{
-			zone->next = (allocInfo *)call_mmap(PAGES.large, nb_page, size);
+			zone->next = (t_allocinfo *)call_mmap(g_pages.large, nb_page, size);
 			zone = zone->next;
 		}
 	}
-	return ((void*)zone + sizeof(allocInfo));
+	return ((void*)zone + sizeof(t_allocinfo));
 }
 
 void	*malloc(size_t size)
@@ -81,9 +81,9 @@ void	*malloc(size_t size)
 	allocation = NULL;
 	if (size <= 0)
 		return (allocation);
-	if (structSize + size <= ts)
+	if (STRUCTSIZE + size <= TS)
 		allocation = tiny(size);
-	else if (structSize + size <= ss)
+	else if (STRUCTSIZE + size <= SS)
 		allocation = small(size);
 	else
 		allocation = large(size);

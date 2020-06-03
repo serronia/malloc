@@ -19,44 +19,43 @@
 # include <sys/mman.h>
 # include "../Libft/includes/libft.h"
 
-# define ts 128
-# define ss	1024
-# define structSize	16
+# define TS 128
+# define SS	1024
+# define STRUCTSIZE	16
 
-typedef struct	s_allocInfo
+typedef struct	s_allocinfo
 {
 	void			*next;
 	size_t			size : 63;
-	unsigned int	isFree : 1;
-}				allocInfo;
+	unsigned int	is_free : 1;
+}				t_allocinfo;
 
 typedef struct	s_pages
 {
-	allocInfo	*tiny;
-	size_t		tSize;
-	allocInfo	*small;
-	allocInfo	*large;
-}				pages;
+	t_allocinfo	*tiny;
+	t_allocinfo	*small;
+	t_allocinfo	*large;
+}				t_pages;
 
-pages		PAGES;
-int			exists(allocInfo *map);
-void		*malloc(size_t size);
-void		free(void *ptr);
-void		*realloc(void *ptr, size_t size);
-void		show_alloc_mem(void);
-void		*tiny(size_t size);
-void		*small(size_t size);
-void		*large(size_t size);
-void		print_all(allocInfo *map);
-void		print_addr(void *addr);
-void        *calloc(size_t nbElement, size_t sizeElement);
-void		map_length(allocInfo *map, int pages, size_t size);
-void		*call_mmap(allocInfo *zone, int nb_pages, size_t size);
-size_t		align_number(size_t size);
-allocInfo	*init_struct(allocInfo *zone, size_t size);
-allocInfo	*next_zone(allocInfo *actual_zone, size_t size);
-allocInfo	*split_zone(allocInfo *actual, size_t size);
-allocInfo	*split_free(allocInfo *actual, size_t size);
-allocInfo	*concat_free(allocInfo *actual);
+t_pages			g_pages;
+int				exists(t_allocinfo *map);
+void			*malloc(size_t size);
+void			free(void *ptr);
+void			*realloc(void *ptr, size_t size);
+void			show_alloc_mem(void);
+void			*tiny(size_t size);
+void			*small(size_t size);
+void			*large(size_t size);
+void			print_all(t_allocinfo *map);
+void			print_addr(void *addr);
+void			*calloc(size_t nb_element, size_t size_element);
+void			map_length(t_allocinfo *map, int nb_pages, size_t size);
+void			*call_mmap(t_allocinfo *zone, int nb_pages, size_t size);
+size_t			align_number(size_t size);
+t_allocinfo		*init_struct(t_allocinfo *zone, size_t size);
+t_allocinfo		*next_zone(t_allocinfo *actual_zone, size_t size);
+t_allocinfo		*split_zone(t_allocinfo *actual, size_t size);
+t_allocinfo		*split_free(t_allocinfo *actual, size_t size);
+t_allocinfo		*concat_free(t_allocinfo *actual);
 
 #endif
