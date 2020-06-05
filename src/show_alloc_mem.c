@@ -39,7 +39,7 @@ void	print_all(t_allocinfo *map)
 		ft_putnbr(map->size);
 		write(1, " octets\n", 8);
 		if (map->next == NULL)
-			break;
+			break ;
 		map = map->next;
 	}
 }
