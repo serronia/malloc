@@ -17,6 +17,7 @@ void		*realloc(void *ptr, size_t size)
 	t_allocinfo	*zone;
 	t_allocinfo	*next;
 	t_allocinfo	*next_tmp;
+	size_t		tmp_size;
 
 //	t_allocinfo	*actual;
 
@@ -35,12 +36,13 @@ void		*realloc(void *ptr, size_t size)
 		show_alloc_mem();
 
 		next_tmp = next->next;
+		tmp_size = next->size;
 
 		ft_memcpy(next, zone,  zone->size - 16);
 
 		
 
-		next->size = size;
+		next->size = tmp_size;
 		next->next = next_tmp;
 		show_alloc_mem();
 		zone->is_free = 1;
