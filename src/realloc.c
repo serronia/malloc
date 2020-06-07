@@ -15,7 +15,10 @@
 void		*realloc(void *ptr, size_t size)
 {
 	t_allocinfo	*zone;
-	t_allocinfo	*actual;
+	t_allocinfo	*next;
+	t_allocinfo	*next_tmp;
+
+//	t_allocinfo	*actual;
 
 	zone = ptr - STRUCTSIZE;
 	if (exists(zone))
@@ -27,23 +30,23 @@ void		*realloc(void *ptr, size_t size)
 
 		show_alloc_mem();
 
-		actual = zone;
-		zone = malloc(size);
+		next = (void *)malloc(size) - 16;
 
 		show_alloc_mem();
-		ft_putstr("size \n");
-		ft_putnbr(actual->size);
-		write(1, "\n", 1);
-		ft_putnbr(size);
-		ft_putstr("\n");
 
-		ft_memcpy(zone, actual + STRUCTSIZE, actual->size - STRUCTSIZE);
+		next_tmp = next->next;
 
-		ft_putstr("really");
+		ft_memcpy(next, zone,  zone->size - 16);
 
-		actual->is_free = 1;
+		
+
+		next->size = size;
+		next->next = next_tmp;
+		show_alloc_mem();
+		zone->is_free = 1;
+		zone = next;
 	}
-	return ((void*)zone + (sizeof(t_allocinfo)));
+	return ((void*)zone + 16);
 }
 
 t_allocinfo	*split_zone(t_allocinfo *actual, size_t size)

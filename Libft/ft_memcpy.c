@@ -26,8 +26,6 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 		n--;
 		t++;
 		f++;
-//		ft_putnbr(n);
-//ZZ		ft_putstr("\n");
 	}
 	return (dst);
 }

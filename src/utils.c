@@ -56,13 +56,15 @@ int		map_length(t_allocinfo *map, int pages, size_t size)
 	return (0);
 }
 
-int            map_length_large(t_allocinfo *map, int pages, size_t size)
+t_allocinfo            *map_length_large(t_allocinfo *map, int pages, size_t size)
 {
         size_t  total_length;
 
         total_length = map->size;
+	if (total_length > 32768)
+		total_length = 0;
         if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
-                return (0);
+                return (NULL);
         while (map->next != NULL)
         {
                 map = map->next;
@@ -70,14 +72,30 @@ int            map_length_large(t_allocinfo *map, int pages, size_t size)
 		if (total_length > 32768)
 			total_length = 0;
                 if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
-                        return (0);
+                        return (NULL);
         }
+	
         if (size + STRUCTSIZE > 32768 - total_length){
-                map->next = (t_allocinfo *)call_mmap(map, ((size + STRUCTSIZE) / getpagesize() + 8), size);
+        //        map->next = (t_allocinfo *)call_mmap(map, ((size + STRUCTSIZE) / getpagesize() + 8), size);
+
+//		page = getpagesize() * nb_pages;
+        map->next = mmap(NULL, (getpagesize() * ((size + STRUCTSIZE) / getpagesize() + 8)), PROT_READ | PROT_WRITE,
+                        MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
+
+
+		ft_putstr("callmap appelé donc malloc fait\n mais pas la struct attention \n : ");
 		ft_putnbr(total_length);
+		map = map->next;
+		map->next = NULL;
+		map->size = size + 16;
+		map->is_free = 0;
 		write(1, "\n", 1);
-		return(1);
+		return(map);
 	}
+	ft_putnbr(total_length);
+	ft_putstr("\n");
+	ft_putstr("sortie de fonction map length large\n");
+	return(NULL);
 }
 
 
@@ -104,7 +122,9 @@ t_allocinfo	*init_struct(t_allocinfo *zone, size_t size)
 	new_zone.is_free = 0;
 	new_zone.next = NULL;
 	zone->next = (void*)zone + zone->size + 1;
+	ft_putstr("ou est le prob\n");
 	ft_memcpy(zone->next, &new_zone, STRUCTSIZE);
+	ft_putstr("ici\n");
 	return (zone);
 }
 
