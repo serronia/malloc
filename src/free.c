@@ -61,19 +61,19 @@ void		free(void *ptr)
 	t_allocinfo	*freed;
 
 	if (ptr == NULL)
-		exit(0);
+		return ;
 	freed = ptr - STRUCTSIZE;
 	if (exists(freed))
-		exit(0);
-	if (freed->size <= 4096)
+		return ;
+	//if (freed->size <= 4096)
 		freed->is_free = 1;
-	else
-	{
-		prev = previous_zone(g_pages.large, freed);
-		if (prev)
-			prev->next = freed->next;
-		else
-			g_pages.large = freed->next;
-		munmap(freed, freed->size);
-	}
+//	else
+//	{
+//		prev = previous_zone(g_pages.large, freed);
+//		if (prev)
+//			prev->next = freed->next;
+//		else
+//			g_pages.large = freed->next;
+//		munmap(freed, freed->size);
+//	}
 }

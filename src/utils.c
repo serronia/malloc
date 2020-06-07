@@ -14,6 +14,7 @@
 
 t_allocinfo	*next_zone(t_allocinfo *actual_zone, size_t size)
 {
+	ft_putstr("oui\n");
 	if (actual_zone->is_free == 1)
 	{
 		concat_free(actual_zone);
@@ -34,25 +35,52 @@ t_allocinfo	*next_zone(t_allocinfo *actual_zone, size_t size)
 	return (actual_zone->next);
 }
 
-void		map_length(t_allocinfo *map, int pages, size_t size)
+int		map_length(t_allocinfo *map, int pages, size_t size)
 {
 	size_t	total_length;
 
 	total_length = map->size;
 	if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
-		return ;
+		return (0);
 	while (map->next != NULL)
 	{
 		map = map->next;
 		total_length += map->size;
 		if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
-			return ;
+			return (0);
 	}
 	total_length -= (total_length / (pages * getpagesize()))
 			* (pages * getpagesize());
-	if ((total_length + size + STRUCTSIZE) > (pages * getpagesize()))
+	if ((total_length + size + STRUCTSIZE + 1) > (pages * getpagesize()))
 		map->next = (t_allocinfo *)call_mmap(map, pages, size);
+	return (0);
 }
+
+int            map_length_large(t_allocinfo *map, int pages, size_t size)
+{
+        size_t  total_length;
+
+        total_length = map->size;
+        if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
+                return (0);
+        while (map->next != NULL)
+        {
+                map = map->next;
+                total_length += map->size;
+		if (total_length > 32768)
+			total_length = 0;
+                if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
+                        return (0);
+        }
+        if (size + STRUCTSIZE > 32768 - total_length){
+                map->next = (t_allocinfo *)call_mmap(map, ((size + STRUCTSIZE) / getpagesize() + 8), size);
+		ft_putnbr(total_length);
+		write(1, "\n", 1);
+		return(1);
+	}
+}
+
+
 
 void		*call_mmap(t_allocinfo *zone, int nb_pages, size_t size)
 {
@@ -69,12 +97,13 @@ void		*call_mmap(t_allocinfo *zone, int nb_pages, size_t size)
 
 t_allocinfo	*init_struct(t_allocinfo *zone, size_t size)
 {
+	ft_putstr("init\n");
 	t_allocinfo new_zone;
 
 	new_zone.size = size + STRUCTSIZE;
 	new_zone.is_free = 0;
 	new_zone.next = NULL;
-	zone->next = (void*)zone + zone->size;
+	zone->next = (void*)zone + zone->size + 1;
 	ft_memcpy(zone->next, &new_zone, STRUCTSIZE);
 	return (zone);
 }

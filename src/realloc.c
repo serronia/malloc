@@ -24,9 +24,23 @@ void		*realloc(void *ptr, size_t size)
 		zone = split_zone(zone, size);
 	else
 	{
+
+		show_alloc_mem();
+
 		actual = zone;
 		zone = malloc(size);
-		ft_memcpy(zone, actual, actual->size);
+
+		show_alloc_mem();
+		ft_putstr("size \n");
+		ft_putnbr(actual->size);
+		write(1, "\n", 1);
+		ft_putnbr(size);
+		ft_putstr("\n");
+
+		ft_memcpy(zone, actual + STRUCTSIZE, actual->size - STRUCTSIZE);
+
+		ft_putstr("really");
+
 		actual->is_free = 1;
 	}
 	return ((void*)zone + (sizeof(t_allocinfo)));
@@ -42,6 +56,7 @@ t_allocinfo	*split_zone(t_allocinfo *actual, size_t size)
 	actual->size = size + STRUCTSIZE;
 	actual->next = (void*)actual + actual->size;
 	ft_memcpy(actual->next, &new, STRUCTSIZE);
+	
 	return (actual);
 }
 
