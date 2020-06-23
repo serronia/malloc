@@ -48,13 +48,12 @@ void	*small(size_t size)
 
 void	*large(size_t size)
 {
-
 	t_allocinfo	*zone;
 	size_t		nb_page;
 
 	nb_page = ((size + STRUCTSIZE) / getpagesize() + 8);
 	ft_putnbr(nb_page);
-	ft_putstr("  voila \n" );
+	ft_putstr("  voila \n");
 	if (g_pages.large == NULL)
 	{
 		g_pages.large = (t_allocinfo *)call_mmap(g_pages.large, nb_page, size);
@@ -62,8 +61,8 @@ void	*large(size_t size)
 	}
 	else
 	{
-		if ((zone = map_length_large(g_pages.large, 1, size)) == NULL){
-			ft_putstr("j'y rentre\n");
+		if ((zone = map_length_large(g_pages.large, 1, size)) == NULL)
+		{
 			zone = next_zone(g_pages.large, size);
 		}
 	}

@@ -65,7 +65,9 @@ void		free(void *ptr)
 	freed = ptr - STRUCTSIZE;
 	if (exists(freed))
 		return ;
-	//if (freed->size <= 4096)
+	freed->is_free = 1;
+}
+/*	//if (freed->size <= 4096)
 		freed->is_free = 1;
 //	else
 //	{
@@ -77,3 +79,4 @@ void		free(void *ptr)
 //		munmap(freed, freed->size);
 //	}
 }
+*/

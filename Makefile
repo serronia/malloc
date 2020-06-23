@@ -26,7 +26,8 @@ INC_PATH = ./includes/
 
 INC_NAME = ft_malloc.h
 
-SRC_NAME = free.c malloc.c utils.c realloc.c show_alloc_mem.c calloc.c
+SRC_NAME =	free.c malloc.c utils.c realloc.c show_alloc_mem.c calloc.c\
+			map_length.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC = $(addprefix $(INC_PATH), $(INC_NAME))
@@ -64,7 +65,6 @@ clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null
 	@echo "Objs cleaned"
 	@make clean -C ./Libft
-
 
 fclean: clean
 	@rm -rf $(NAME) 2> /dev/null

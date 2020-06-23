@@ -35,71 +35,6 @@ t_allocinfo	*next_zone(t_allocinfo *actual_zone, size_t size)
 	return (actual_zone->next);
 }
 
-int		map_length(t_allocinfo *map, int pages, size_t size)
-{
-	size_t	total_length;
-
-	total_length = map->size;
-	if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
-		return (0);
-	while (map->next != NULL)
-	{
-		map = map->next;
-		total_length += map->size;
-		if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
-			return (0);
-	}
-	total_length -= (total_length / (pages * getpagesize()))
-			* (pages * getpagesize());
-	if ((total_length + size + STRUCTSIZE + 1) > (pages * getpagesize()))
-		map->next = (t_allocinfo *)call_mmap(map, pages, size);
-	return (0);
-}
-
-t_allocinfo            *map_length_large(t_allocinfo *map, int pages, size_t size)
-{
-        size_t  total_length;
-
-        total_length = map->size;
-	if (total_length > 32768)
-		total_length = 0;
-        if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
-                return (NULL);
-        while (map->next != NULL)
-        {
-                map = map->next;
-                total_length += map->size;
-		if (total_length > 32768)
-			total_length = 0;
-                if (map->is_free == 1 && map->size >= size + STRUCTSIZE)
-                        return (NULL);
-        }
-	
-        if (size + STRUCTSIZE > 32768 - total_length){
-        //        map->next = (t_allocinfo *)call_mmap(map, ((size + STRUCTSIZE) / getpagesize() + 8), size);
-
-//		page = getpagesize() * nb_pages;
-        map->next = mmap(NULL, (getpagesize() * ((size + STRUCTSIZE) / getpagesize() + 8)), PROT_READ | PROT_WRITE,
-                        MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
-
-
-		ft_putstr("callmap appelé donc malloc fait\n mais pas la struct attention \n : ");
-		ft_putnbr(total_length);
-		map = map->next;
-		map->next = NULL;
-		map->size = size + 16;
-		map->is_free = 0;
-		write(1, "\n", 1);
-		return(map);
-	}
-	ft_putnbr(total_length);
-	ft_putstr("\n");
-	ft_putstr("sortie de fonction map length large\n");
-	return(NULL);
-}
-
-
-
 void		*call_mmap(t_allocinfo *zone, int nb_pages, size_t size)
 {
 	size_t	page;
@@ -115,9 +50,9 @@ void		*call_mmap(t_allocinfo *zone, int nb_pages, size_t size)
 
 t_allocinfo	*init_struct(t_allocinfo *zone, size_t size)
 {
-	ft_putstr("init\n");
 	t_allocinfo new_zone;
 
+	ft_putstr("init\n");
 	new_zone.size = size + STRUCTSIZE;
 	new_zone.is_free = 0;
 	new_zone.next = NULL;
