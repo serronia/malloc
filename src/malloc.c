@@ -52,8 +52,6 @@ void	*large(size_t size)
 	size_t		nb_page;
 
 	nb_page = ((size + STRUCTSIZE) / getpagesize() + 8);
-	ft_putnbr(nb_page);
-	ft_putstr("  voila \n");
 	if (g_pages.large == NULL)
 	{
 		g_pages.large = (t_allocinfo *)call_mmap(g_pages.large, nb_page, size);

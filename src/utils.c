@@ -14,7 +14,6 @@
 
 t_allocinfo	*next_zone(t_allocinfo *actual_zone, size_t size)
 {
-	ft_putstr("oui\n");
 	if (actual_zone->is_free == 1)
 	{
 		concat_free(actual_zone);
@@ -52,14 +51,11 @@ t_allocinfo	*init_struct(t_allocinfo *zone, size_t size)
 {
 	t_allocinfo new_zone;
 
-	ft_putstr("init\n");
 	new_zone.size = size + STRUCTSIZE;
 	new_zone.is_free = 0;
 	new_zone.next = NULL;
 	zone->next = (void*)zone + zone->size + 1;
-	ft_putstr("ou est le prob\n");
 	ft_memcpy(zone->next, &new_zone, STRUCTSIZE);
-	ft_putstr("ici\n");
 	return (zone);
 }
 

@@ -26,15 +26,12 @@ void		*realloc(void *ptr, size_t size)
 		zone = split_zone(zone, size);
 	else
 	{
-		show_alloc_mem();
 		next = (void *)malloc(size) - 16;
-		show_alloc_mem();
 		next_tmp = next->next;
 		tmp_size = next->size;
 		ft_memcpy(next, zone, zone->size - 16);
 		next->size = tmp_size;
 		next->next = next_tmp;
-		show_alloc_mem();
 		zone->is_free = 1;
 		zone = next;
 	}
