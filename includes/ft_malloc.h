@@ -18,10 +18,13 @@
 # include <string.h>
 # include <sys/mman.h>
 # include "../Libft/includes/libft.h"
+# include <pthread.h>
 
 # define TS 128
 # define SS	1024
 # define STRUCTSIZE	16
+
+extern pthread_mutex_t g_mutex;
 
 typedef struct	s_allocinfo
 {
@@ -58,5 +61,6 @@ t_allocinfo		*next_zone(t_allocinfo *actual_zone, size_t size);
 t_allocinfo		*split_zone(t_allocinfo *actual, size_t size);
 t_allocinfo		*split_free(t_allocinfo *actual, size_t size);
 t_allocinfo		*concat_free(t_allocinfo *actual);
+size_t			nb_pages(size_t size);
 
 #endif

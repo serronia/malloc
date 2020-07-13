@@ -27,7 +27,7 @@ INC_PATH = ./includes/
 INC_NAME = ft_malloc.h
 
 SRC_NAME =	free.c malloc.c utils.c realloc.c show_alloc_mem.c calloc.c\
-			map_length.c
+			map_length.c valloc.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC = $(addprefix $(INC_PATH), $(INC_NAME))

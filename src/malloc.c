@@ -1,16 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   malloc.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jdarko <jdarko@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/10 16:39:09 by jdarko            #+#    #+#             */
-/*   Updated: 2020/05/10 16:39:10 by jdarko           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "ft_malloc.h"
 
-#include "../includes/ft_malloc.h"
+pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void	*tiny(size_t size)
 {
@@ -71,6 +61,7 @@ void	*malloc(size_t size)
 {
 	void	*allocation;
 
+	pthread_mutex_lock(&g_mutex);
 	size = align_number(size);
 	allocation = NULL;
 	if (size <= 0)
@@ -81,5 +72,6 @@ void	*malloc(size_t size)
 		allocation = small(size);
 	else
 		allocation = large(size);
+	pthread_mutex_unlock(&g_mutex);
 	return (allocation);
 }

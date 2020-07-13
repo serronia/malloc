@@ -1,19 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   show_alloc_mem.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jdarko <jdarko@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/10 16:39:29 by jdarko            #+#    #+#             */
-/*   Updated: 2020/05/10 16:39:30 by jdarko           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../includes/ft_malloc.h"
+#include "ft_malloc.h"
 
 void	show_alloc_mem(void)
 {
+	pthread_mutex_lock(&g_mutex);
 	write(1, "Tiny : ", 8);
 	print_addr(g_pages.tiny);
 	write(1, "\n", 1);
@@ -26,6 +15,7 @@ void	show_alloc_mem(void)
 	print_addr(g_pages.large);
 	write(1, "\n", 1);
 	print_all(g_pages.large);
+	pthread_mutex_unlock(&g_mutex);
 }
 
 void	print_all(t_allocinfo *map)

@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jdarko <jdarko@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/10 16:39:39 by jdarko            #+#    #+#             */
-/*   Updated: 2020/05/10 16:39:40 by jdarko           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../includes/ft_malloc.h"
+#include "ft_malloc.h"
 
 t_allocinfo	*next_zone(t_allocinfo *actual_zone, size_t size)
 {
@@ -61,13 +49,22 @@ t_allocinfo	*init_struct(t_allocinfo *zone, size_t size)
 
 size_t		align_number(size_t size)
 {
-	size_t result;
 	size_t r;
 
 	r = size % 16;
 	if (r == 0)
-		result = size;
-	else
-		result = size + (16 - r);
-	return (result);
+		return (size);
+	return (size + (16 - r));
+}
+
+size_t		nb_pages(size_t size)
+{
+	size_t	i;
+	int		p;
+
+	p = getpagesize();
+	i = 1;
+	size > 0 ? i = size / p : 0;
+	size % i != 0 ? i++ : 0;
+	return (i);
 }

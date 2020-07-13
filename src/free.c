@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jdarko <jdarko@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/10 16:39:01 by jdarko            #+#    #+#             */
-/*   Updated: 2020/05/10 16:39:02 by jdarko           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../includes/ft_malloc.h"
+#include "ft_malloc.h"
 
 t_allocinfo	*concat_free(t_allocinfo *actual)
 {
@@ -63,20 +51,12 @@ void		free(void *ptr)
 	if (ptr == NULL)
 		return ;
 	freed = ptr - STRUCTSIZE;
+	pthread_mutex_lock(&g_mutex);
 	if (exists(freed))
+	{
+		pthread_mutex_unlock(&g_mutex);
 		return ;
+	}
+	pthread_mutex_unlock(&g_mutex);
 	freed->is_free = 1;
 }
-/*	//if (freed->size <= 4096)
-		freed->is_free = 1;
-//	else
-//	{
-//		prev = previous_zone(g_pages.large, freed);
-//		if (prev)
-//			prev->next = freed->next;
-//		else
-//			g_pages.large = freed->next;
-//		munmap(freed, freed->size);
-//	}
-}
-*/
