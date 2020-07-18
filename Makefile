@@ -48,16 +48,13 @@ $(NAME): $(LIBFT) $(OBJ_PATH) $(OBJ)
 	@echo "$(NAME) created"
 
 $(LIBFT):
-	echo "1"
 	@make -C ./Libft
 
 $(OBJ_PATH):
-	echo "2"
 	@mkdir -p $(OBJ_PATH) 2> /dev/null
 	@echo "Directory ./obj created"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC)
-	echo "3"
 	@gcc $(FLAGS) -fPIC  -I includes  -o $@ -c $< 
 	@echo "Binary File done : $*$\"
 
